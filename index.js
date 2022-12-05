@@ -24,10 +24,15 @@ dbConnect
 });
 
 const bodyParser = require('body-parser');
+
 app.use(bodyParser.urlencoded({ extended: true }));
 const jsonParser = bodyParser.json();
+
+
 app.post('/pokemon/insert', jsonParser, (req, res) => {
+    const dbConnect = dbo.getDb();
     const body = req.body;
+    dbConnect.collection('pokemon').insert(body);
     console.log('Got body:', body);
     res.json(body);
     
