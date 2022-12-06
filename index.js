@@ -72,9 +72,10 @@ app.post('/pokemon/insert', jsonParser, (req, res) => {
 app.post('/pokedex/insert', jsonParser, (req, res) => {
     const body = req.body;
     const dbConnect = dbo.getDb();
-    selectPokemon = {name:body.selectPokemon};
-    dbConnect.collection('pokedex').insertOne(selectPokemon);
-    console.log('Pokemon capturé:', body);
+    dbConnect.collection('pokemon').find(body).toArray(function(err,result){
+        dbConnect.collection('pokedex').insertOne(result[0],{forceServerObjectId: false});
+        res.json(result[0]);
+    })
 });
 
 app.listen(port, function () {
