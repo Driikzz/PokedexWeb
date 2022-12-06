@@ -24,11 +24,11 @@ app.get("/pokemon/list", function (req, res) {
 });
 
 const bodyParser = require('body-parser');
+const { set } = require("express/lib/application");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 const jsonParser = bodyParser.json();
 
-app.
 
 app.delete('/pokemon/delete',jsonParser,(req,res) =>{
     const body = req.body;
@@ -38,13 +38,15 @@ app.delete('/pokemon/delete',jsonParser,(req,res) =>{
     res.json(body);
 });
 
-app.put('/pokemon/update/:name',jsonParser,(req,res) => {
+app.post('/pokemon/update', jsonParser, (req, res) => {
     const body = req.body;
     const dbConnect = dbo.getDb();
-    dbConnect.collection('pokemon').updateOne({...body});
-    console.log('Update le pokémon:', body);
-    res.json(body);
+    changePokemon = {name:body.changePokemon};
+    setNamePokemon = {name:body.name};
+    dbConnect.collection('pokemon').updateOne(changePokemon,{$set:setNamePokemon});
+    console.log('Changement de:', body);
 });
+
 
 app.post('/pokemon/insert', jsonParser, (req, res) => {
     const body = req.body;
