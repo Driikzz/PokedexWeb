@@ -8,19 +8,19 @@ dbo.connectToServer();
 /* index.js code before... */
 app.get("/pokemon/list", function (req, res) {
 //on se connecte à la DB MongoDB
-const dbConnect = dbo.getDb();
+    const dbConnect = dbo.getDb();
 //premier test permettant de récupérer mes pokemons !
-dbConnect
-    .collection("pokemon")
-    .find({}) // permet de filtrer les résultats
-    /*.limit(50) // pourrait permettre de limiter le nombre de résultats */
-    .toArray(function (err, result) {
-    if (err) {
-        res.status(400).send("Error fetching pokemons!");
-    } else {
-        res.json(result);
-    }
-    });
+    dbConnect
+        .collection("pokemon")
+        .find({}) // permet de filtrer les résultats
+        /*.limit(50) // pourrait permettre de limiter le nombre de résultats */
+        .toArray(function (err, result) {
+        if (err) {
+            res.status(400).send("Error fetching pokemons!");
+        } else {
+            res.json(result);
+        }
+        });
 });
 
 const bodyParser = require('body-parser');
@@ -28,11 +28,28 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 const jsonParser = bodyParser.json();
 
+app.
+
+app.delete('/pokemon/delete',jsonParser,(req,res) =>{
+    const body = req.body;
+    const dbConnect = dbo.getDb();
+    dbConnect.collection('pokemon').deleteOne({...body});
+    console.log('Delete:', body);
+    res.json(body);
+});
+
+app.put('/pokemon/update/:name',jsonParser,(req,res) => {
+    const body = req.body;
+    const dbConnect = dbo.getDb();
+    dbConnect.collection('pokemon').updateOne({...body});
+    console.log('Update le pokémon:', body);
+    res.json(body);
+});
 
 app.post('/pokemon/insert', jsonParser, (req, res) => {
-    const dbConnect = dbo.getDb();
     const body = req.body;
-    dbConnect.collection('pokemon').insert(body);
+    const dbConnect = dbo.getDb();
+    dbConnect.collection('pokemon').insert({...body});
     console.log('Got body:', body);
     res.json(body);
     
