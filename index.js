@@ -1,7 +1,10 @@
+var cors = require('cors')
 const express = require("express");
 const dbo = require("./db/db");
 const app = express();
+app.use(cors());
 const port = 4444;
+
 
 dbo.connectToServer();
 
@@ -34,7 +37,6 @@ app.get("/pokedexUser/list", function (req, res) {
         }
         });
 });
-
 const bodyParser = require('body-parser');
 const { set } = require("express/lib/application");
 
@@ -46,6 +48,14 @@ app.delete('/pokemon/delete',jsonParser,(req,res) =>{
     const body = req.body;
     const dbConnect = dbo.getDb();
     dbConnect.collection('pokemon').deleteOne({...body});
+    console.log('Delete:', body);
+    res.json(body);
+});
+//DELETE POKEDEX
+app.delete('/pokedexUser/delete',jsonParser,(req,res) =>{
+    const body = req.body;
+    const dbConnect = dbo.getDb();
+    dbConnect.collection('pokedex').deleteOne({...body});
     console.log('Delete:', body);
     res.json(body);
 });
@@ -73,8 +83,9 @@ app.post('/pokedex/insert', jsonParser, (req, res) => {
     const body = req.body;
     const dbConnect = dbo.getDb();
     dbConnect.collection('pokemon').find(body).toArray(function(err,result){
-        dbConnect.collection('pokedex').insertOne(result[0],{forceServerObjectId: false});
-        res.json(result[0]);
+        dbConnect.collection('pokedex').insertOne(result[0],{forceServerObjectId: false}).then((ress,err) => {
+            res.json(ress);
+        }).catch(err=>res.json(err));
     })
 });
 
