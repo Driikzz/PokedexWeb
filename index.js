@@ -68,6 +68,14 @@ app.post('/pokemon/update', jsonParser, (req, res) => {
     dbConnect.collection('pokemon').updateOne(changePokemon,{$set:setNamePokemon});
     console.log('Changement de:', body);
 });
+app.post('/pokemon/updatePoke', jsonParser, (req, res) => {
+    const body = req.body;
+    const dbConnect = dbo.getDb();
+    changePokemon = {name:body.changePokemon};
+    setNamePokemon = {name:body.name};
+    dbConnect.collection('pokedex').updateOne(changePokemon,{$set:setNamePokemon});
+    console.log('Changement de:', body);
+});
 
 
 //UPDATE pokedex
